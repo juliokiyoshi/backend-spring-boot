@@ -38,8 +38,8 @@ public class DeamanagementApplication implements CommandLineRunner {
 		//Creating some user
 		for (int i = 0; i < 5; i++) {
 			User u = new User();
-			u.setEmail("email " + i);
-			u.setName("name " + i);
+			u.setEmail("julio+" + i+"@gmail.com");
+			u.setName("julio+" + i);
 			u.setLinkedin("linkedin " + i);
 			u.setPassword("pwd " + i);
 
