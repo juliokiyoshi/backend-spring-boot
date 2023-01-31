@@ -31,4 +31,5 @@ public class StudentService {
     public Page<Student> findAllStudentsPaginated(Integer page, Integer pageSize) {
         return this.studentRepository.findAllPaginated(PageRequest.of(page, pageSize));
     }
+
 }
