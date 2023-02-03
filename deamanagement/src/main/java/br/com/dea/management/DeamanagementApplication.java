@@ -1,5 +1,8 @@
 package br.com.dea.management;
 
+import br.com.dea.management.student.domain.Student;
+import br.com.dea.management.student.repository.StudentRepository;
+import br.com.dea.management.student.service.StudentService;
 import br.com.dea.management.user.domain.User;
 import br.com.dea.management.user.repository.UserRepository;
 import br.com.dea.management.user.service.UserService;
@@ -11,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +30,12 @@ public class DeamanagementApplication implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private StudentRepository studentRepository;
+
+	@Autowired
+	private StudentService studentService;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -43,7 +53,12 @@ public class DeamanagementApplication implements CommandLineRunner {
 			u.setLinkedin("linkedin " + i);
 			u.setPassword("pwd " + i);
 
-			this.userRepository.save(u);
+			Student s = new Student();
+			s.setUniversity("UNICAMP");
+			s.setFinishDate(LocalDate.now());
+			s.setGraduation("grad");
+			s.setUser(u);
+			this.studentRepository.save(s);
 		}
 
 		//Loading all Users
