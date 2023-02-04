@@ -3,8 +3,6 @@ package br.com.dea.management.user.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import static sun.security.util.Debug.println;
-
 @Entity
 @NamedQuery(name = "myQuery", query = "SELECT u FROM User u where u.name = :name")
 @Getter
