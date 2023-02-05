@@ -4,6 +4,7 @@ import br.com.dea.management.student.domain.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.dea.management.student.repository.StudentRepository;
 import org.springframework.data.domain.Page;
+import br.com.dea.management.exceptions.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -32,4 +33,7 @@ public class StudentService {
         return this.studentRepository.findAllPaginated(PageRequest.of(page, pageSize));
     }
 
+    public Student findStudentById(Long id) {
+        return this.studentRepository.findById(id).orElseThrow(() -> new NotFoundException(Student.class, id));
+    }
 }
