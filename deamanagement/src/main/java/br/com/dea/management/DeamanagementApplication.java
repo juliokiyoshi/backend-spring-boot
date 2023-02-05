@@ -77,11 +77,11 @@ public class DeamanagementApplication implements CommandLineRunner {
 		users.forEach(u -> System.out.println("Name: " + u.getName()));
 
 		//Loading by @Query
-		Optional<User> loadedUserByName = this.userRepository.findByName("julio+1");
+		Optional<User> loadedUserByName = this.userRepository.findByName("julio1");
 		System.out.println("User name 1 (From @Query) name: " + loadedUserByName.get().getName());
 
 		TypedQuery<User> q = entityManager.createNamedQuery("myQuery", User.class);
-		q.setParameter("name", "julio+2");
+		q.setParameter("name", "julio2");
 		User userFromNamedQuery = q.getResultList().get(0);
 		System.out.println("User name 2 (From NamedQuery) name: " + userFromNamedQuery.getName());
 
