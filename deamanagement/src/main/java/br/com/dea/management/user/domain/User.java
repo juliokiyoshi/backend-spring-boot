@@ -1,9 +1,15 @@
 package br.com.dea.management.user.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @NamedQuery(name = "myQuery", query = "SELECT u FROM User u where u.name = :name")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -20,47 +26,20 @@ public class User {
     @Column
     private String password;
 
+    /**
+     * Reference to customize the getter method:
+     * https://stackoverflow.com/questions/18139678/lombok-how-to-customise-getter-for-boolean-object-field
+     * or from lombock project: https://projectlombok.org/features/GetterSetter line:
+     * You can always manually disable getter/setter generation for any field by using the special AccessLevel.NONE access level.
+     * This lets you override the behaviour of a @Getter, @Setter or @Data annotation on a class.
+     */
     @Column
+    @Getter(AccessLevel.NONE)
     private String linkedin;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getLinkedin() {
+        System.out.println("getter customized");
         return linkedin;
-    }
-
-    public void setLinkedin(String linkedin) {
-        this.linkedin = linkedin;
     }
 
 }

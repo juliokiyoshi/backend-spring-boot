@@ -47,17 +47,28 @@ public class DeamanagementApplication implements CommandLineRunner {
 
 		//Creating some user
 		for (int i = 0; i < 5; i++) {
-			User u = new User();
-			u.setEmail("julio+" + i+"@gmail.com");
-			u.setName("julio+" + i);
-			u.setLinkedin("linkedin " + i);
-			u.setPassword("pwd " + i);
 
-			Student s = new Student();
-			s.setUniversity("UNICAMP");
-			s.setFinishDate(LocalDate.now());
-			s.setGraduation("grad");
-			s.setUser(u);
+			// METODO ANTIGO PARA CRIAR O OBJETO USER AGORA PODEMOS UTILIZAR O PADRAO BUILDER DO LAMBOK
+//			User u = new User();
+//			u.setEmail("julio+" + i+"@gmail.com");
+//			u.setName("julio+" + i);
+//			u.setLinkedin("linkedin " + i);
+//			u.setPassword("pwd " + i);
+
+			User u = User.builder()
+					.email("julio+" + i+"@gmail.com")
+					.name("julio" + i)
+					.linkedin("linkedin " + i)
+					.password("pwd $i")
+					.build();
+			u.getLinkedin(); // get customizado
+
+			Student s = Student.builder()
+					.university("UNICAMP")
+					.finishDate(LocalDate.now())
+					.graduation("grad $i")
+					.user(u)
+					.build();
 			this.studentRepository.save(s);
 		}
 
@@ -66,11 +77,11 @@ public class DeamanagementApplication implements CommandLineRunner {
 		users.forEach(u -> System.out.println("Name: " + u.getName()));
 
 		//Loading by @Query
-		Optional<User> loadedUserByName = this.userRepository.findByName("julio+1");
+		Optional<User> loadedUserByName = this.userRepository.findByName("julio1");
 		System.out.println("User name 1 (From @Query) name: " + loadedUserByName.get().getName());
 
 		TypedQuery<User> q = entityManager.createNamedQuery("myQuery", User.class);
-		q.setParameter("name", "julio+2");
+		q.setParameter("name", "julio2");
 		User userFromNamedQuery = q.getResultList().get(0);
 		System.out.println("User name 2 (From NamedQuery) name: " + userFromNamedQuery.getName());
 
