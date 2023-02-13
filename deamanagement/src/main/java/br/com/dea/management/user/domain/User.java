@@ -34,12 +34,6 @@ public class User {
      * This lets you override the behaviour of a @Getter, @Setter or @Data annotation on a class.
      */
     @Column
-    @Getter(AccessLevel.NONE)
     private String linkedin;
-
-    public String getLinkedin() {
-        System.out.println("getter customized");
-        return linkedin;
-    }
 
 }
