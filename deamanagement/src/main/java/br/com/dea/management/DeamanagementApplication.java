@@ -27,7 +27,6 @@ import java.util.Optional;
 				@Server(url = "https://deamanagement.com.br${server.servlet.contextPath}", description = "Development environment URL")
 		}
 )
-
 @SpringBootApplication
 public class DeamanagementApplication implements CommandLineRunner {
 

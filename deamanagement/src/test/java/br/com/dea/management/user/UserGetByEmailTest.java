@@ -1,9 +1,7 @@
 package br.com.dea.management.user;
 
-import br.com.dea.management.student.domain.Student;
 import br.com.dea.management.user.domain.User;
 import br.com.dea.management.user.repository.UserRepository;
-import br.com.dea.management.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,7 +16,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,7 +34,6 @@ public class UserGetByEmailTest {
     void whenRequestingAnExistentUserByEmail_thenReturnTheStudentSuccessfully() throws Exception {
         this.userRepository.deleteAll();
         this.createMockedUser(10);
-
 
         mockMvc.perform(get("/user/email 0" ))
                 .andExpect(status().isOk())
