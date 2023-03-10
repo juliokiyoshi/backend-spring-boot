@@ -44,6 +44,29 @@ public class StudentCreationPayloadValidationTests {
                 .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email could not be null")))
                 .andExpect(jsonPath("$.details[*].field", hasItem("password")))
                 .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Password could not be null")));
+    }
 
+    @Test
+    void whenPayloadHasInvalidEmail_shouldReturn400() throws Exception {
+
+        String payload = "{" +
+                "\"name\": \"name\"," +
+                "\"email\": \"email\"," +
+                "\"linkedin\": \"linkedin\"," +
+                "\"university\": \"university\"," +
+                "\"graduation\": \"graduation\"," +
+                "\"password\": \"password\"," +
+                "\"finishDate\": \"2033-03-03\"" +
+                "}";
+
+        mockMvc.perform(post("/student")
+                        .contentType(APPLICATION_JSON_UTF8).content(payload))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.details").isArray())
+                .andExpect(jsonPath("$.details", hasSize(1)))
+                .andExpect(jsonPath("$.details[*].field", hasItem("email")))
+                .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email passed is not valid!")));
     }
 }
