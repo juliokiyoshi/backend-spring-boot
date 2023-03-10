@@ -2,10 +2,12 @@ package br.com.dea.management;
 
 import br.com.dea.management.student.domain.Student;
 import br.com.dea.management.student.repository.StudentRepository;
-import br.com.dea.management.student.service.StudentService;
 import br.com.dea.management.user.domain.User;
 import br.com.dea.management.user.repository.UserRepository;
 import br.com.dea.management.user.service.UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -18,6 +20,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@OpenAPIDefinition(
+		info = @Info(title = "Dea Management", version = "1.0", description = "Dea Management API Description"),
+		servers = {
+				@Server(url = "http://localhost:8082${server.servlet.contextPath}", description = "Local environment URL"),
+				@Server(url = "https://deamanagement.com.br${server.servlet.contextPath}", description = "Development environment URL")
+		}
+)
 @SpringBootApplication
 public class DeamanagementApplication implements CommandLineRunner {
 
@@ -34,9 +43,6 @@ public class DeamanagementApplication implements CommandLineRunner {
 	@Autowired
 	private StudentRepository studentRepository;
 
-	@Autowired
-	private StudentService studentService;
-
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -46,7 +52,7 @@ public class DeamanagementApplication implements CommandLineRunner {
 		this.userRepository.deleteAll();
 
 		//Creating some user
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 
 			// METODO ANTIGO PARA CRIAR O OBJETO USER AGORA PODEMOS UTILIZAR O PADRAO BUILDER DO LAMBOK
 //			User u = new User();
