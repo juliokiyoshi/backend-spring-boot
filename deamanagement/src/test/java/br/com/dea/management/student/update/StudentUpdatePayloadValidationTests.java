@@ -51,12 +51,36 @@ public class StudentUpdatePayloadValidationTests {
     }
 
     @Test
-    void whenEditingAStudentThatDoesNotExists_thenReturn404() throws Exception {
+    void whenEditingAStudentThatDoesNotExistsButIsSendingABadRequest_thenReturn400() throws Exception {
         this.studentRepository.deleteAll();
 
         String payload = "{" +
                 "\"name\": \"name\"," +
                 "\"email\": \"email\"," +
+                "\"linkedin\": \"linkedin\"," +
+                "\"university\": \"university\"," +
+                "\"graduation\": \"graduation\"," +
+                "\"password\": \"password\"," +
+                "\"finishDate\": \"2023-02-27\"" +
+                "}";
+        mockMvc.perform(put("/student/1")
+                        .contentType(APPLICATION_JSON_UTF8).content(payload))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.details").isArray())
+                .andExpect(jsonPath("$.details", hasSize(1)))
+                .andExpect(jsonPath("$.details[*].field", hasItem("email")))
+                .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email passed is not valid!")));
+    }
+
+    @Test
+    void whenEditingAStudentThatDoesNotExists_thenReturn404() throws Exception {
+        this.studentRepository.deleteAll();
+
+        String payload = "{" +
+                "\"name\": \"name\"," +
+                "\"email\": \"email@gmail.com\"," +
                 "\"linkedin\": \"linkedin\"," +
                 "\"university\": \"university\"," +
                 "\"graduation\": \"graduation\"," +

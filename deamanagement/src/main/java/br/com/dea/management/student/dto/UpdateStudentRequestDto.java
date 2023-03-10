@@ -1,5 +1,7 @@
 package br.com.dea.management.student.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -16,6 +18,8 @@ public class UpdateStudentRequestDto {
     private String name;
 
     @NotNull(message = "Email could not be null")
+    @NotEmpty(message = "Email could not be empty")
+    @Email(message = "Email passed is not valid!")
     private String email;
 
     private String linkedin;
