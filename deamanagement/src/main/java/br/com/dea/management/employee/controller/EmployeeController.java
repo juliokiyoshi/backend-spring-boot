@@ -1,6 +1,7 @@
 package br.com.dea.management.employee.controller;
 
 import br.com.dea.management.employee.domain.Employee;
+import br.com.dea.management.employee.dto.CreateEmployeeRequestDto;
 import br.com.dea.management.employee.dto.EmployeeDto;
 import br.com.dea.management.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -75,4 +77,19 @@ public class EmployeeController {
 
         log.info(String.format("Employee removed successfully : id : %s", employeeId));
     }
+    @Operation(summary = "Create a new employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Payload not valid"),
+            @ApiResponse(responseCode = "500", description = "Error creating student"),
+    })
+    @PostMapping("/employee")
+    public void createStudent(@Valid @RequestBody CreateEmployeeRequestDto createEmployeeRequestDto) {
+        log.info(String.format("Creating Student : Payload : %s", createEmployeeRequestDto));
+
+        Employee Employee = employeeService.createEmployee(createEmployeeRequestDto);
+
+        log.info(String.format("Student created successfully : id : %s", Employee.getId()));
+    }
+
 }

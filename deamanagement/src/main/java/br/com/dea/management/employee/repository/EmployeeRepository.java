@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e")
-    @EntityGraph(attributePaths = {"position", "user"})
+    @EntityGraph(attributePaths = {"position", "user"}) // usado para evitar o problema do N+1 assim evitando queries desnecessarias(busca na tabela de usuario e posição  para cada employee encontrado), podendo apenas fazer um join das tabelas para obter os dados
     public Page<Employee> findAllPaginated(Pageable pageable);
 
 }

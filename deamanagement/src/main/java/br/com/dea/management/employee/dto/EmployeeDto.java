@@ -5,6 +5,9 @@ import br.com.dea.management.employee.domain.Employee;
 import br.com.dea.management.position.domain.Position;
 import br.com.dea.management.position.dto.PositionDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -20,6 +23,9 @@ public class EmployeeDto {
 
     private Long id;
     private String name;
+    @NotNull(message = "Email could not be null")
+    @NotEmpty(message = "Email could not be empty")
+    @Email(message = "Email passed is not valid!")
     private String email;
     private String linkedin;
     private EmployeeType employeeType;
