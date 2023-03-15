@@ -1,5 +1,6 @@
-package br.com.dea.management.employee.post;
+package br.com.dea.management.employee.put;
 
+import br.com.dea.management.employee.EmployeeTestUtils;
 import br.com.dea.management.employee.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,18 +17,23 @@ import java.nio.charset.Charset;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class EmployeeCreationPayloadValidation {
+public class UpdateEmployeePayloadValidation {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private EmployeeTestUtils employeeTestUtils;
 
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
@@ -45,7 +51,7 @@ public class EmployeeCreationPayloadValidation {
                 "}";
 
 
-        mockMvc.perform(post("/employee")
+        mockMvc.perform(put("/employee/1")
                         .contentType(APPLICATION_JSON_UTF8).content(payload))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -58,17 +64,24 @@ public class EmployeeCreationPayloadValidation {
 
     @Test
     void whenPayloadHasRequiredFieldsAreMissing_thenReturn400AndTheErrors() throws Exception {
-        String payload = "{}";
-        mockMvc.perform(post("/employee")
+
+        String payload = "{" +
+                "\"name\": \"\"," +
+                "\"email\": \"\"," +
+                "\"linkedin\": \"\"," +
+                "\"employeeType\": \"DEVELOPER\"," +
+                "\"description\": \"\"," +
+                "\"password\": \"\"," +
+                "\"seniority\": \"\"" +
+                "}";
+        mockMvc.perform(put("/employee/1")
                         .contentType(APPLICATION_JSON_UTF8).content(payload))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.details").isArray())
-                .andExpect(jsonPath("$.details", hasSize(3)))
+                .andExpect(jsonPath("$.details", hasSize(1)))
                 .andExpect(jsonPath("$.details[*].field", hasItem("email")))
-                .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email could not be null")))
-                .andExpect(jsonPath("$.details[*].field", hasItem("password")))
-                .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Password could not be null")));
+                .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email could not be empty")));
     }
 }
