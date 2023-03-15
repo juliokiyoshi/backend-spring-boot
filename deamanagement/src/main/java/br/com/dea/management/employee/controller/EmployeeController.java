@@ -81,15 +81,31 @@ public class EmployeeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "400", description = "Payload not valid"),
-            @ApiResponse(responseCode = "500", description = "Error creating student"),
+            @ApiResponse(responseCode = "500", description = "Error creating employee"),
     })
     @PostMapping("/employee")
-    public void createStudent(@Valid @RequestBody CreateEmployeeRequestDto createEmployeeRequestDto) {
-        log.info(String.format("Creating Student : Payload : %s", createEmployeeRequestDto));
+    public void createEmployee(@Valid @RequestBody CreateEmployeeRequestDto createEmployeeRequestDto) {
+        log.info(String.format("Creating employee : Payload : %s", createEmployeeRequestDto));
 
         Employee Employee = employeeService.createEmployee(createEmployeeRequestDto);
 
-        log.info(String.format("Student created successfully : id : %s", Employee.getId()));
+        log.info(String.format("Employee created successfully : id : %s", Employee.getId()));
+    }
+
+    @Operation(summary = "Update a Employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Payload not valid"),
+            @ApiResponse(responseCode = "404", description = "Student not found"),
+            @ApiResponse(responseCode = "500", description = "Error updating employee"),
+    })
+    @PutMapping("/employee/{employeeId}")
+    public void updateEmployee(@PathVariable Long employeeId, @Valid @RequestBody CreateEmployeeRequestDto createEmployeeRequestDto) {
+        log.info(String.format("Updating Employee : Payload : %s", createEmployeeRequestDto));
+
+        Employee employee = employeeService.updateEmployee(employeeId, createEmployeeRequestDto);
+
+        log.info(String.format("Employee updated successfully : id : %s", employee.getId()));
     }
 
 }

@@ -63,4 +63,22 @@ public class EmployeeService {
 
         return  this.employeeRepository.save(employee);
     }
+
+    public Employee updateEmployee(Long employeeId,CreateEmployeeRequestDto createEmployeeRequestDto ){
+        Employee employee = this.findEmployeeById(employeeId);
+        User user = employee.getUser();
+        Position position = employee.getPosition();
+
+        user.setName(createEmployeeRequestDto.getName());
+        user.setEmail(createEmployeeRequestDto.getEmail());
+        user.setPassword(createEmployeeRequestDto.getPassword());
+        user.setLinkedin(createEmployeeRequestDto.getLinkedin());
+
+        position.setDescription(createEmployeeRequestDto.getDescription());
+        position.setSeniority(createEmployeeRequestDto.getSeniority());
+
+        employee.setEmployeeType(createEmployeeRequestDto.getEmployeeType());
+
+        return this.employeeRepository.save(employee);
+    }
 }
