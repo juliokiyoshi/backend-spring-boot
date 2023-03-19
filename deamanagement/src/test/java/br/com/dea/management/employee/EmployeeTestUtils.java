@@ -16,6 +16,15 @@ public class EmployeeTestUtils {
     @Autowired
     private PositionRepository positionRepository;
 
+    public Position createFakePosition(String description, String seniority) {
+        Position position = Position.builder()
+                .description(description)
+                .seniority(seniority)
+                .build();
+
+        return this.positionRepository.save(position);
+    }
+
     public void createFakeEmployees(int amount) {
 
         Position position = Position.builder()
@@ -27,7 +36,7 @@ public class EmployeeTestUtils {
 
         for (int i = 0; i < amount; i++) {
             User u = new User();
-            u.setEmail(i+"email@gmail.com");
+            u.setEmail(i + "email@gmail.com");
             u.setName("name " + i);
             u.setLinkedin("linkedin " + i);
             u.setPassword("password " + i);

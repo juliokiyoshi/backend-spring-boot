@@ -2,6 +2,7 @@ package br.com.dea.management.employee.put;
 
 import br.com.dea.management.employee.EmployeeTestUtils;
 import br.com.dea.management.employee.repository.EmployeeRepository;
+import br.com.dea.management.position.repository.PositionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,8 @@ import java.nio.charset.Charset;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,19 +34,23 @@ public class UpdateEmployeePayloadValidation {
     @Autowired
     private EmployeeTestUtils employeeTestUtils;
 
+
+    @Autowired
+    private PositionRepository positionRepository;
+
     public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
     @Test
     void whenRequestingEmployeeCreationWithInvalidPayload_thenCreateAEmployeeGetsError400() throws Exception {
+        this.employeeRepository.deleteAll();
         String payload = "{" +
-                "\"name\": \"julio\"," +
-                "\"email\": \"julio@\"," +
-                "\"linkedin\": \"julio.matsoui\"," +
+                "\"name\": \"name\"," +
+                "\"email\": \"email\"," +
+                "\"linkedin\": \"linkedin\"," +
                 "\"employeeType\": \"DEVELOPER\"," +
-                "\"description\": \"mobile developer\"," +
-                "\"password\": \"password\"," +
-                "\"seniority\": \"JR\"" +
+                "\"position\": 1, " +
+                "\"password\": \"password\"" +
                 "}";
 
 
@@ -83,5 +86,28 @@ public class UpdateEmployeePayloadValidation {
                 .andExpect(jsonPath("$.details", hasSize(1)))
                 .andExpect(jsonPath("$.details[*].field", hasItem("email")))
                 .andExpect(jsonPath("$.details[*].errorMessage", hasItem("Email could not be empty")));
+    }
+
+    @Test
+    void whenEditingAEmployeeWithAPositionThatDoesNotExistsDoesNotExists_thenReturn404() throws Exception {
+        this.employeeRepository.deleteAll();
+        this.positionRepository.deleteAll();
+        this.employeeTestUtils.createFakeEmployees(1);
+
+        String payload = "{" +
+                "\"name\": \"name\"," +
+                "\"email\": \"email@email.com\"," +
+                "\"linkedin\": \"linkedin\"," +
+                "\"employeeType\": \"DEVELOPER\"," +
+                "\"position\": 10, " +
+                "\"password\": \"password\"" +
+                "}";
+        mockMvc.perform(put("/employee/1")
+                        .contentType(APPLICATION_JSON_UTF8).content(payload))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.details").isArray())
+                .andExpect(jsonPath("$.details", hasSize(1)));
     }
 }

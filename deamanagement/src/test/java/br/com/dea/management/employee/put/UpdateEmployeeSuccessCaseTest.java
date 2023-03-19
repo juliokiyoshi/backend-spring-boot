@@ -4,6 +4,7 @@ import br.com.dea.management.employee.EmployeeTestUtils;
 import br.com.dea.management.employee.EmployeeType;
 import br.com.dea.management.employee.domain.Employee;
 import br.com.dea.management.employee.repository.EmployeeRepository;
+import br.com.dea.management.position.domain.Position;
 import br.com.dea.management.student.domain.Student;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,27 +47,27 @@ public class UpdateEmployeeSuccessCaseTest {
         this.employeeRepository.deleteAll();
 
         this.employeeTestUtils.createFakeEmployees(10);
+        Position position = this.employeeTestUtils.createFakePosition("mobile developer", "JR");
 
 
         Employee employeeBase = this.employeeRepository.findAll().get(0);
 
         String payload = "{" +
                 "\"name\": \"julio\"," +
-                "\"email\": \"julio@gmail.ocm\"," +
+                "\"email\": \"julio@gmail.com\"," +
                 "\"linkedin\": \"julio.matsoui\"," +
                 "\"employeeType\": \"DEVELOPER\"," +
-                "\"description\": \"mobile developer\"," +
-                "\"password\": \"password\"," +
-                "\"seniority\": \"JR\"" +
+                "\"position\": " + position.getId() + "," +
+                "\"password\": \"password\"" +
                 "}";
-        mockMvc.perform(put("/employee/"+employeeBase.getId())
+        mockMvc.perform(put("/employee/" + employeeBase.getId())
                         .contentType(APPLICATION_JSON_UTF8).content(payload))
                 .andExpect(status().isOk());
 
         Employee employee = this.employeeRepository.findAll().get(0);
 
         assertThat(employee.getUser().getName()).isEqualTo("julio");
-        assertThat(employee.getUser().getEmail()).isEqualTo("julio@gmail.ocm");
+        assertThat(employee.getUser().getEmail()).isEqualTo("julio@gmail.com");
         assertThat(employee.getUser().getLinkedin()).isEqualTo("julio.matsoui");
         assertThat(employee.getUser().getPassword()).isEqualTo("password");
         assertThat(employee.getEmployeeType()).isEqualTo(EmployeeType.DEVELOPER);

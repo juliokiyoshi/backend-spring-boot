@@ -3,6 +3,7 @@ package br.com.dea.management.employee.controller;
 import br.com.dea.management.employee.domain.Employee;
 import br.com.dea.management.employee.dto.CreateEmployeeRequestDto;
 import br.com.dea.management.employee.dto.EmployeeDto;
+import br.com.dea.management.employee.dto.UpdateEmployeeRequestDto;
 import br.com.dea.management.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -100,10 +101,10 @@ public class EmployeeController {
             @ApiResponse(responseCode = "500", description = "Error updating employee"),
     })
     @PutMapping("/employee/{employeeId}")
-    public void updateEmployee(@PathVariable Long employeeId, @Valid @RequestBody CreateEmployeeRequestDto createEmployeeRequestDto) {
-        log.info(String.format("Updating Employee : Payload : %s", createEmployeeRequestDto));
+    public void updateEmployee(@PathVariable Long employeeId, @Valid @RequestBody UpdateEmployeeRequestDto updateEmployeeRequestDto) {
+        log.info(String.format("Updating Employee : Payload : %s", updateEmployeeRequestDto));
 
-        Employee employee = employeeService.updateEmployee(employeeId, createEmployeeRequestDto);
+        Employee employee = employeeService.updateEmployee(employeeId, updateEmployeeRequestDto);
 
         log.info(String.format("Employee updated successfully : id : %s", employee.getId()));
     }

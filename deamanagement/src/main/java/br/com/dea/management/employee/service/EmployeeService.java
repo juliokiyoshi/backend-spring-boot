@@ -2,6 +2,7 @@ package br.com.dea.management.employee.service;
 
 import br.com.dea.management.employee.domain.Employee;
 import br.com.dea.management.employee.dto.CreateEmployeeRequestDto;
+import br.com.dea.management.employee.dto.UpdateEmployeeRequestDto;
 import br.com.dea.management.employee.repository.EmployeeRepository;
 import br.com.dea.management.exceptions.NotFoundException;
 import br.com.dea.management.position.domain.Position;
@@ -42,18 +43,15 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(CreateEmployeeRequestDto createEmployeeRequestDto){
+        Position position = this.positionRepository.findById(createEmployeeRequestDto.getPosition())
+                .orElseThrow(() -> new NotFoundException(Position.class, createEmployeeRequestDto.getPosition()));
+
         User user = User.builder()
                 .name(createEmployeeRequestDto.getName())
                 .email(createEmployeeRequestDto.getEmail())
                 .password(createEmployeeRequestDto.getPassword())
                 .linkedin(createEmployeeRequestDto.getLinkedin())
                 .build();
-        Position position = Position.builder()
-                .description(createEmployeeRequestDto.getDescription())
-                .seniority(createEmployeeRequestDto.getSeniority())
-                .build();
-
-        this.positionRepository.save(position);
 
         Employee employee = Employee.builder()
                 .user(user)
@@ -61,23 +59,24 @@ public class EmployeeService {
                 .position(position)
                 .build();
 
-        return  this.employeeRepository.save(employee);
+        return this.employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Long employeeId,CreateEmployeeRequestDto createEmployeeRequestDto ){
-        Employee employee = this.findEmployeeById(employeeId);
+    public Employee updateEmployee(Long studentId, UpdateEmployeeRequestDto updateEmployeeRequestDto ){
+        Employee employee = this.findEmployeeById(studentId);
+        Position position = this.positionRepository.findById(updateEmployeeRequestDto.getPosition())
+                .orElseThrow(() -> new NotFoundException(Position.class, updateEmployeeRequestDto.getPosition()));
+
         User user = employee.getUser();
-        Position position = employee.getPosition();
 
-        user.setName(createEmployeeRequestDto.getName());
-        user.setEmail(createEmployeeRequestDto.getEmail());
-        user.setPassword(createEmployeeRequestDto.getPassword());
-        user.setLinkedin(createEmployeeRequestDto.getLinkedin());
+        user.setName(updateEmployeeRequestDto.getName());
+        user.setEmail(updateEmployeeRequestDto.getEmail());
+        user.setPassword(updateEmployeeRequestDto.getPassword());
+        user.setLinkedin(updateEmployeeRequestDto.getLinkedin());
 
-        position.setDescription(createEmployeeRequestDto.getDescription());
-        position.setSeniority(createEmployeeRequestDto.getSeniority());
-
-        employee.setEmployeeType(createEmployeeRequestDto.getEmployeeType());
+        employee.setUser(user);
+        employee.setEmployeeType(updateEmployeeRequestDto.getEmployeeType());
+        employee.setPosition(position);
 
         return this.employeeRepository.save(employee);
     }
