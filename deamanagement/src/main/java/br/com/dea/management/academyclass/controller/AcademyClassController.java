@@ -2,6 +2,7 @@ package br.com.dea.management.academyclass.controller;
 
 import br.com.dea.management.academyclass.domain.AcademyClass;
 import br.com.dea.management.academyclass.dto.AcademyClassDto;
+import br.com.dea.management.academyclass.dto.CreateAcademyClassRequestDto;
 import br.com.dea.management.academyclass.service.AcademyClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
