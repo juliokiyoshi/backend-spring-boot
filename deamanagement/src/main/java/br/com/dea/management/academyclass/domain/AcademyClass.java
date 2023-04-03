@@ -29,7 +29,11 @@ public class AcademyClass {
     @Enumerated(EnumType.STRING)
     private ClassType classType;
 
-    @ManyToOne
+    /**
+     * About Lazy or Eager ->
+     * https://stackoverflow.com/questions/2990799/difference-between-fetchtype-lazy-and-eager-in-java-persistence-api
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id")
     private Employee instructor;
 }
