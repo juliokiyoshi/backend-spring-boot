@@ -2,11 +2,11 @@ package br.com.dea.management.project.service;
 
 import br.com.dea.management.employee.domain.Employee;
 import br.com.dea.management.employee.repository.EmployeeRepository;
-import br.com.dea.management.exceptions.GlobalExceptionHandler;
 import br.com.dea.management.exceptions.InvalidParameterException;
 import br.com.dea.management.exceptions.NotFoundException;
 import br.com.dea.management.project.domain.Project;
 import br.com.dea.management.project.dto.CreateProjectRequestDto;
+import br.com.dea.management.project.dto.UpdateProjectRequestDto;
 import br.com.dea.management.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,8 +38,8 @@ public class ProjectService {
         Employee productOwner = this.employeeRepository.findById(createProjectRequestDto.getProductOwnerId())
                 .orElseThrow(() -> new NotFoundException(Employee.class, createProjectRequestDto.getProductOwnerId()));
 
-        if (scrumMaster == productOwner){
-            throw new InvalidParameterException(Project.class,createProjectRequestDto.getProductOwnerId(),createProjectRequestDto.getProductOwnerId() );
+        if (scrumMaster == productOwner) {
+            throw new InvalidParameterException(Project.class, createProjectRequestDto.getProductOwnerId(), createProjectRequestDto.getProductOwnerId());
         }
 
         Project project = Project.builder()
@@ -51,6 +51,30 @@ public class ProjectService {
                 .scrumMaster(scrumMaster)
                 .productOwner(productOwner)
                 .build();
+
+        return this.projectRepository.save(project);
+    }
+
+    public Project updateProject(Long projectId, UpdateProjectRequestDto updateProjectRequestDto) {
+        Project project = this.findProjectById(projectId);
+
+        Employee scrumMaster = this.employeeRepository.findById(updateProjectRequestDto.getScrumMasterId())
+                .orElseThrow(() -> new NotFoundException(Employee.class, updateProjectRequestDto.getScrumMasterId()));
+
+        Employee productOwner = this.employeeRepository.findById(updateProjectRequestDto.getProductOwnerId())
+                .orElseThrow(() -> new NotFoundException(Employee.class, updateProjectRequestDto.getProductOwnerId()));
+
+        if (scrumMaster == productOwner) {
+            throw new InvalidParameterException(Project.class, updateProjectRequestDto.getProductOwnerId(), updateProjectRequestDto.getProductOwnerId());
+        }
+
+        project.setName(updateProjectRequestDto.getName());
+        project.setClient(updateProjectRequestDto.getClient());
+        project.setExternalProductManager(updateProjectRequestDto.getExternalProductManager());
+        project.setEndDate(updateProjectRequestDto.getEndDate());
+        project.setStartDate(updateProjectRequestDto.getStartDate());
+        project.setProductOwner(productOwner);
+        project.setScrumMaster(scrumMaster);
 
         return this.projectRepository.save(project);
     }

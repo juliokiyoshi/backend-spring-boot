@@ -3,6 +3,7 @@ package br.com.dea.management.project.controller;
 import br.com.dea.management.project.domain.Project;
 import br.com.dea.management.project.dto.CreateProjectRequestDto;
 import br.com.dea.management.project.dto.ProjectReturnDto;
+import br.com.dea.management.project.dto.UpdateProjectRequestDto;
 import br.com.dea.management.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -71,11 +72,26 @@ public class ProjectController {
             @ApiResponse(responseCode = "500", description = "Error creating project"),
     })
     @PostMapping("/project")
-    public void createClass(@Valid @RequestBody CreateProjectRequestDto createProjectRequestDto) {
+    public void createProject(@Valid @RequestBody CreateProjectRequestDto createProjectRequestDto) {
         log.info(String.format("Creating Project : Payload : %s", createProjectRequestDto));
 
         Project Project = this.ProjectService.createProject(createProjectRequestDto);
 
         log.info(String.format("Project created successfully : id : %s", Project.getId()));
+    }
+
+    @Operation(summary = "Creates a new Project")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Payload not valid"),
+            @ApiResponse(responseCode = "500", description = "Error creating project"),
+    })
+    @PutMapping("/project/{id}")
+    public void updateProject(@PathVariable Long id, @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto) {
+        log.info(String.format("Updating Class : Payload : %s", updateProjectRequestDto));
+
+        Project Project = this.ProjectService.updateProject(id,updateProjectRequestDto);
+
+        log.info(String.format("Project updated successfully : id : %s", Project.getId()));
     }
 }
