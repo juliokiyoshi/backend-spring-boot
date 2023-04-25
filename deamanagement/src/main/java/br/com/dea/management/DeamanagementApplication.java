@@ -49,54 +49,54 @@ public class DeamanagementApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//Deleting all Users
-		this.userRepository.deleteAll();
+//		this.userRepository.deleteAll();
 
 		//Creating some user
-		for (int i = 0; i < 10; i++) {
-
-			// METODO ANTIGO PARA CRIAR O OBJETO USER AGORA PODEMOS UTILIZAR O PADRAO BUILDER DO LAMBOK
-//			User u = new User();
-//			u.setEmail("julio+" + i+"@gmail.com");
-//			u.setName("julio+" + i);
-//			u.setLinkedin("linkedin " + i);
-//			u.setPassword("pwd " + i);
-
-			User u = User.builder()
-					.email("julio+" + i+"@gmail.com")
-					.name("julio" + i)
-					.linkedin("linkedin " + i)
-					.password("pwd $i")
-					.build();
-			u.getLinkedin(); // get customizado
-
-			Student s = Student.builder()
-					.university("UNICAMP")
-					.finishDate(LocalDate.now())
-					.graduation("grad $i")
-					.user(u)
-					.build();
-			this.studentRepository.save(s);
-		}
-
-		//Loading all Users
-		List<User> users = this.userService.findAllUsers();
-		users.forEach(u -> System.out.println("Name: " + u.getName()));
-
-		//Loading by @Query
-		Optional<User> loadedUserByName = this.userRepository.findByName("julio1");
-		System.out.println("User name 1 (From @Query) name: " + loadedUserByName.get().getName());
-
-		TypedQuery<User> q = entityManager.createNamedQuery("myQuery", User.class);
-		q.setParameter("name", "julio2");
-		User userFromNamedQuery = q.getResultList().get(0);
-		System.out.println("User name 2 (From NamedQuery) name: " + userFromNamedQuery.getName());
-
-		//Loading user by email
-		User loadedUser = this.userService.findUserByEmail("julio+1@gmail.com");
-		System.out.println("User email 1 name: " + loadedUser.getName());
-
-		//Updating user name 1 linkedin
-		loadedUser.setLinkedin("new linkedin");
-		this.userRepository.save(loadedUser);
+//		for (int i = 0; i < 10; i++) {
+//
+//			// METODO ANTIGO PARA CRIAR O OBJETO USER AGORA PODEMOS UTILIZAR O PADRAO BUILDER DO LAMBOK
+////			User u = new User();
+////			u.setEmail("julio+" + i+"@gmail.com");
+////			u.setName("julio+" + i);
+////			u.setLinkedin("linkedin " + i);
+////			u.setPassword("pwd " + i);
+//
+//			User u = User.builder()
+//					.email("julio+" + i+"@gmail.com")
+//					.name("julio" + i)
+//					.linkedin("linkedin " + i)
+//					.password("pwd $i")
+//					.build();
+//			u.getLinkedin(); // get customizado
+//
+//			Student s = Student.builder()
+//					.university("UNICAMP")
+//					.finishDate(LocalDate.now())
+//					.graduation("grad $i")
+//					.user(u)
+//					.build();
+//			this.studentRepository.save(s);
+//		}
+//
+//		//Loading all Users
+//		List<User> users = this.userService.findAllUsers();
+//		users.forEach(u -> System.out.println("Name: " + u.getName()));
+//
+//		//Loading by @Query
+//		Optional<User> loadedUserByName = this.userRepository.findByName("julio1");
+//		System.out.println("User name 1 (From @Query) name: " + loadedUserByName.get().getName());
+//
+//		TypedQuery<User> q = entityManager.createNamedQuery("myQuery", User.class);
+//		q.setParameter("name", "julio2");
+//		User userFromNamedQuery = q.getResultList().get(0);
+//		System.out.println("User name 2 (From NamedQuery) name: " + userFromNamedQuery.getName());
+//
+//		//Loading user by email
+//		User loadedUser = this.userService.findUserByEmail("julio+1@gmail.com");
+//		System.out.println("User email 1 name: " + loadedUser.getName());
+//
+//		//Updating user name 1 linkedin
+//		loadedUser.setLinkedin("new linkedin");
+//		this.userRepository.save(loadedUser);
 	}
 }
